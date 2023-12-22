@@ -1,0 +1,38 @@
+{% extends 'layout/base.html' %}
+{% block title %}Giỏ hàng{% endblock %}
+{% block content %}
+<h1 class="text-center text-info mt-1">GIỎ HÀNG</h1>
+
+{% if 'cart' in session %}
+<table class="table">
+    <tr>
+        <th>Mã Phòng</th>
+        <th>Tên Phòng</th>
+        <th>Đơn Giá</th>
+        <th>Số lượng</th>
+        <th></th>
+    </tr>
+    {% for c in session['cart'].values() %}
+    <tr>
+        <td>{{c.id}}</td>
+        <td>{{c.name}}</td>
+        <td>{{c.price}}</td>
+        <td>
+            <input type="button" value="{{c.quantity}}" class="formp-control">
+        </td>
+        <td>
+            <button class="btn btn-danger">&times;</button>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+<div>
+    <h5> Số lượng: {{cart_stats.total_quantity}} phòng</h5>
+    <h5> Tổng tiền: {{cart_stats.total_amount}} VNĐ</h5>
+</div>
+<div class="text-end">
+    <input type="button" value="Thanh Toán" class="mr-2 btn btn-danger">
+</div>
+{% endif %}
+
+{% endblock %}
