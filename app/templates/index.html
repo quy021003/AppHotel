@@ -1,85 +1,12 @@
 {% extends 'layout/base.html' %}
+{%block link%}
+<link rel="stylesheet" href="/static/css/index.css"/>
+{%endblock%}
 {% block title %}Trang chủ{% endblock %}
 {% block content %}
 
-<script>
 
-</script>
-<style>
-    .animate__animated
-    {
-    animation-iteration-count: infinite;
-    }
 
-    .changeColor
-    {
-    animation: changColorText 1s ease infinite;
-    }
-    @keyframes changeColorText
-    {
-    from {background-color: red; color: yellow;}
-    to {background-color: yellow; color: red;}
-    }
-    .head-content
-    {
-    color: gold;
-    }
-    .warning
-    {
-    background-color: red;
-    animation-name: changeColorText;
-    animation-duration: 4s;
-    animation-iteration-count: infinite;
-    }
-    .card>span
-    {
-    position: absolute;
-    right: 0;
-    top: 0;
-    padding: 5px;
-
-    }
-
-.full-width
-{
-    width: 100%;
-}
-.no-padding
-{
-    padding: 0px;
-}
-.v-margin-top-30
-{
-    margin-top:30px;
-}
-.v-margin-bottom-30
-{
-    margin-bottom: 30px;
-}
-.heading__title {
-    color: #000;
-    margin-bottom: 5px;
-    font-size: 32px;
-    font-weight: bold;
-}
-.heading__description {
-    font-size: 18px;
-    color: #333;
-    margin-bottom: 2px;
-    font-style: italic;
-}
-.v-margin-bottom-15
-{
-    margin-bottom: 15px;
-}
-.img-cate
-{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-}
-</style>
 <div class="head-content">
     <h1 class="heading_text text-center mt-2 animate__animated animate__flash">ĐẶT PHÒNG KHÁCH SẠN TRỰC TUYẾN</h1>
 </div>
@@ -91,12 +18,24 @@
             <p class="heading__description">Chọn loại phòng bạn muốn</p>
         </div>
         <div class="img-cate">
-            {% for c in categories %}
-            <a class="mt-2" style="position: relative; display: inline-block;" href="/?cate_id={{c.id}}">
-                <img class="full-width" style="width:250px; height:350px;" src="https://scontent.subi.vn/cmsmedia/15-cach-bo-tri-phong-khach-nha-ong-5m-co-cau-thang-hien-dai-dep-nhat-2021-dang-rat-duoc-nhieu-nguoi-quan-tam-606bd58820980d68930d28237b40757a.jpg" href="/?cate_id={{c.id}}">
-                <span style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 24px; color: white; text-shadow: 2px 2px 4px black;">{{c.name}}</span>
+            <div>
+            <a class="mt-2" style="position: relative; display: inline-block;" href="/single">
+                <img class="full-width" style="width:250px; height:350px;" src="https://th.bing.com/th/id/R.79c1e28db681a64910f3cf5a4322c8da?rik=6P3HQw4W%2fmQyJA&pid=ImgRaw&r=0">
+                <span style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 24px; color: white; text-shadow: 2px 2px 4px black;">Phòng đơn</span>
             </a>
-            {% endfor %}
+            </div>
+            <div>
+            <a class="mt-2" style="position: relative; display: inline-block;" href="#" >
+                <img class="full-width" style="width:250px; height:350px;" src="https://th.bing.com/th/id/OIP.uIPMZt9MIFwHrBF72xClQwHaFj?w=1024&h=768&rs=1&pid=ImgDetMain">
+                <span style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 24px; color: white; text-shadow: 2px 2px 4px black;">Phòng đôi</span>
+            </a>
+            </div>
+            <div>
+            <a class="mt-2" style="position: relative; display: inline-block;" href="#">
+                <img class="full-width" style="width:250px; height:350px;" src="https://img-nos.yiyouliao.com/alph/5a0a9a29ef81a7af86385134316cc5ee.jpeg?yiyouliao_channel=msn_image">
+                <span style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 24px; color: white; text-shadow: 2px 2px 4px black;">Phòng gia đình</span>
+            </a>
+            </div>
         </div>
     </div>
 

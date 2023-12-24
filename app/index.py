@@ -6,6 +6,7 @@ from app import dao, app
 from app import login
 from flask_login import login_user
 
+
 @app.route("/")
 def index():
     kw = request.args.get('kw')
@@ -61,6 +62,16 @@ def load_user(user_id):
 @app.route('/cart')
 def cart():
     return render_template('cart.html')
+
+
+@app.route('/single')
+def single():
+    page = request.args.get('page')
+    s_room = dao.query_single_room(page)
+    num = dao.count_single_room()
+    page_size = app.config['PAGE_SIZE']
+    return render_template('single.html', single_room=s_room,
+                           pages=math.ceil(num/page_size))
 
 
 @app.context_processor
