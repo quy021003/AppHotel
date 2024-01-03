@@ -48,36 +48,38 @@
 
     <div class="row">
         {% for p in products%}
-        {% if p.price > 300000 %}
+        {% if p.active == 1 %}
         <div class="col-xs-12 col-md-3" style="padding: 8px;">
             <div class="card">
                 <img class="card-img-top" src="{{p.image}}" alt="Card image">
-                <span class="warning">HOT!!!</span>
+                <span class="warning">AVAILABLE</span>
                 <div class="card-body">
                     <h4 class="card-title">{{p.name}}</h4>
                     <p class="card-text">{{p.price}} VND</p>
                     <a href="#" class="btn btn-primary">Xem chi tiết</a>
                     <a href="javascript:;" onclick="addToCart({{p.id}},'{{p.name}}',{{p.price}})"
-                       class="btn btn-danger">Đặt hàng</a>
-                </div>
-            </div>
-        </div>
-        {% else %}
-        <div class="col-xs-12 col-md-3" style="padding: 8px;">
-            <div class="card">
-                <img class="card-img-top" src="{{p.image}}" alt="Card image">
-                <div class="card-body">
-                    <h4 class="card-title">{{p.name}}</h4>
-                    <p class="card-text">{{p.price}} VND</p>
-                    <a href="#" class="btn btn-primary">Xem chi tiết</a>
-                    <a href="javascript:;" onclick="addToCart({{p.id}},'{{p.name}}',{{p.price}})"
-                       class="btn btn-danger">Đặt hàng</a>
+                       class="btn btn-danger" id="btn_a_{{p.id}}">Đặt hàng</a>
                 </div>
             </div>
         </div>
         {% endif %}
-
-
+        {% endfor %}
+        {% for b in products%}
+        {% if b.active == 0 %}
+        <div class="col-xs-12 col-md-3" style="padding: 8px;">
+            <div class="card sold-out-content">
+                <div class="sold-out-panel">
+                    <p class="sold-out-text">ĐÃ ĐƯỢC ĐẶT</p>
+                </div>
+                <img class="card-img-top" src="{{b.image}}" alt="Card image">
+                <div class="card-body">
+                    <h4 class="card-title">{{b.name}}</h4>
+                    <p class="card-text">{{b.price}} VND</p>
+                    <a href="#" class="btn btn-primary full-width pt-2 py-2"></a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
         {% endfor %}
     </div>
 

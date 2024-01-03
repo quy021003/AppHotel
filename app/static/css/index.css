@@ -23,6 +23,32 @@
     animation-duration: 4s;
     animation-iteration-count: infinite;
     }
+    .sold-out-content
+    {
+    position: relative;
+    }
+    .sold-out-panel
+    {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: yellow;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    }
+    .sold-out-text
+    {
+    padding: 5px 0;
+    text-align: center;
+    border: black sold;
+    background-color: red;
+    width: 100%;
+    }
     .card>span
     {
     position: absolute;

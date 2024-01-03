@@ -9,26 +9,30 @@
         <th>Mã Phòng</th>
         <th>Tên Phòng</th>
         <th>Đơn Giá</th>
-        <th>Số lượng</th>
+        <th>Bắt đầu</th>
+        <th>Kết thúc</th>
         <th></th>
     </tr>
     {% for c in session['cart'].values() %}
-    <tr>
+    <tr id="room{{c.id}}">
         <td>{{c.id}}</td>
         <td>{{c.name}}</td>
         <td>{{c.price}}</td>
         <td>
-            <input type="button" value="{{c.quantity}}" class="formp-control">
+            <input type="text" onblur="updateCart({{c.id}}, this)" value="{{c.start}}" class="form-control">
         </td>
         <td>
-            <button class="btn btn-danger">&times;</button>
+            <input type="text" onblur="updateCart({{c.id}}, this)" value="{{c.end}}" class="form-control">
+        </td>
+        <td>
+            <button onclick="deleteCart({{c.id}})" class="btn btn-danger">&times;</button>
         </td>
     </tr>
     {% endfor %}
 </table>
 <div>
-    <h5> Số lượng: {{cart_stats.total_quantity}} phòng</h5>
-    <h5> Tổng tiền: {{cart_stats.total_amount}} VNĐ</h5>
+    <h5> Số lượng: <span class="cart-counter">{{cart_stats.total_quantity}}</span> phòng</h5>
+    <h5> Tổng tiền: <span class="cart-amount">{{"{:,.0f}".format(cart_stats.total_amount)}}</span> VNĐ</h5>
 </div>
 <div class="text-end">
     <input type="button" value="Thanh Toán" class="mr-2 btn btn-danger">
@@ -36,3 +40,4 @@
 {% endif %}
 
 {% endblock %}
+

@@ -1,7 +1,7 @@
 import math
 import utils
 from flask import request, render_template, redirect, jsonify, session
-
+from datetime import datetime, timedelta
 from app import dao, app
 from app import login
 from flask_login import login_user
@@ -39,14 +39,18 @@ def add_to_cart():
         cart = {}
 
     id = str(data.get("id"))
-    if id in cart:
-        cart[id]['quantity'] += 1
-    else:
+    # if id in cart:
+    #     # cart[id]['quantity'] += 1
+    #    #cart[id]['quantity'] = 1
+    if id not in cart:
         cart[id] = {
             "id": id,
             "name": data.get('name'),
             "price": data.get('price'),
-            "quantity": 1
+            "start": str(datetime.now().date()),
+            "end": str(datetime.now().date() + timedelta(days=1)),
+            # "start": str(datetime.now().date()),
+            # "end": str(datetime.now().date() + timedelta(days=1))
         }
 
     session['cart'] = cart
@@ -81,6 +85,25 @@ def common_res():
         'cart_stats' : utils.count_cart(session.get('cart'))
     }
 
+@app.route('/api/cart/<room_id>', methods = ['put'])
+def update_cart(room_id):
+    cart = session.get('cart')
+    if cart and room_id in cart:
+        quantity = request.json.get('quantity')
+        cart[room_id]['quantity'] = int(quantity)
+
+    session['cart'] = cart
+    return jsonify(utils.count_cart(cart))
+
+
+@app.route('/api/cart/<product_id>', methods=['delete'])
+def delete_cart(product_id):
+    cart = session.get('cart')
+    if cart and product_id in cart:
+        del cart[product_id]
+
+    session['cart'] = cart
+    return jsonify(utils.count_cart(cart))
 
 if __name__ == '__main__':
     from app import admin
