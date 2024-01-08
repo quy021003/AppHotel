@@ -8,8 +8,7 @@ def count_cart(cart):
             start = datetime.strptime(c['start'], '%Y-%m-%d')
             end = datetime.strptime(c['end'], '%Y-%m-%d')
             result = int((end - start).days)
-            total_amount += result
-            # total_amount += c['price'] *c['price']
+            total_amount += result * c['price']
 
     return {
         'total_amount': total_amount,

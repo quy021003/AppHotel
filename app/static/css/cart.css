@@ -1,0 +1,16 @@
+.err
+ {
+    background-color: pink;
+    animation: vien_err ease 1s infinite;
+}
+@keyframes vien_err
+{
+     from
+     {
+            border: #db040b solid 2px;
+     }
+     to
+     {
+            border: lightcoral solid 2px;
+     }
+}

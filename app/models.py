@@ -1,7 +1,7 @@
 import hashlib
 
 from app import app, db
-from sqlalchemy import Column, String, Integer, Float, Boolean, ForeignKey, VARCHAR, DATETIME, Enum
+from sqlalchemy import Column, String, Integer, Float, Boolean, ForeignKey, VARCHAR, DATETIME, Enum, DateTime
 from sqlalchemy.orm import relationship
 from flask_login import UserMixin
 from datetime import datetime
@@ -14,36 +14,49 @@ class UserRoleEnum(enum.Enum):
     STAFF = 3
 
 
-class BaseUser(db.Model):
-    __abstract__ = True
-    # attribute
+# class BaseUser(db.Model):
+#     __abstract__ = True
+#     # attribute
+#     id = Column(Integer, primary_key=True, autoincrement=True)
+#     user_name = Column(String(50), nullable=False)
+#     password = Column(String(50), nullable=False)
+#     name = Column(String(50), default='user_normal')
+#     adddress = Column(String(150))
+#     phone = Column(VARCHAR(10))
+
+
+# class Staff(db.Model, UserMixin):
+#     # attribute
+#     id = Column(Integer, primary_key=True, autoincrement=True)
+#     user_name = Column(String(50), nullable=False)
+#     password = Column(String(50), nullable=False)
+#     name = Column(String(50), default='user_normal')
+#     adddress = Column(String(150))
+#     phone = Column(VARCHAR(10))
+#
+#     work = Column(String(150))
+#     salary = Column(Float, default=0)
+#     start_day = Column(DATETIME, default=datetime.now())
+
+
+    # # relationship
+    # invoices = relationship('Invoice', lazy=True, backref='staff')
+    # def __str__(self):
+    #     return self.user_name
+
+
+class User(db.Model, UserMixin):
     id = Column(Integer, primary_key=True, autoincrement=True)
     user_name = Column(String(50), nullable=False)
     password = Column(String(50), nullable=False)
-    name = Column(String(50), nullable=False)
+    name = Column(String(50), default='user_normal')
     adddress = Column(String(150))
     phone = Column(VARCHAR(10))
-
-
-class Staff(BaseUser, UserMixin):
     # attribute
-    work = Column(String(150))
-    salary = Column(Float, default=0)
-    start_day = Column(DATETIME, default=datetime.now())
-
-
-    # relationship
-    invoices = relationship('Invoice', lazy=True, backref='staff')
-    def __str__(self):
-        return self.user_name
-
-
-class User(BaseUser, UserMixin):
-    # attribute
-    certificate = Column(VARCHAR(10))
+    certificate = Column(VARCHAR(10), default='123456')
     role = Column(Enum(UserRoleEnum), default=UserRoleEnum.USER)
-    #relationship
-    invoices = relationship('Invoice', lazy=True, backref='customer')
+    # relationship
+    invoices = relationship('Invoice', lazy=True, backref='User')
     def __str__(self):
         return self.user_name
 
@@ -66,15 +79,17 @@ class Room(db.Model):
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(50), nullable=False, unique=True)
     price = Column(Float, default=0)
-    image = Column(String(500),
+    image = Column(String(900),
                    default='https://th.bing.com/th/id/R.1d28a8a270a65d2f064490e3328cb67c?rik=TecRpNJsxZbrrw&riu=http%3a%2f%2fddcorporation.vn%2fupload%2fimages%2ftin-tuc%2fthiet-ke-thi-cong-noi-that-khach-san-dep-tai-ha-noi8.jpg&ehk=2YGZZBGQ8y5mPy8Jf1EfC4SAGqf7Otwa%2fh3WRiKOimo%3d&risl=&pid=ImgRaw&r=0')
     active = Column(Boolean, default=True)
 
     # relationship
     facilities = relationship('Facility', backref='room', lazy=True)
     images = relationship('Images', backref='room', lazy=True)
-    category_id = Column(Integer, ForeignKey(Category.id), nullable=False)
     bookings = relationship('Booking', lazy=True, backref='room')
+
+    category_id = Column(Integer, ForeignKey(Category.id), nullable=False)
+
     def __str__(self):
         return self.name
 
@@ -100,33 +115,28 @@ class Images(db.Model):
     room_id = Column(Integer, ForeignKey(Room.id), nullable=False)
 
 
-
-
-
-
 class Booking(db.Model):
     # attribute
     id = Column(Integer, autoincrement=True, primary_key=True)
-    start = Column(DATETIME())
-    end = Column(DATETIME())
-    contains = Column(Integer, nullable=False)
-
+    start = Column(DateTime, default=datetime.now())
+    end = Column(DateTime, default=datetime.now())
+    contains = Column(Integer, default=2)
+    price = Column(Float, default=0)
     # foreign-key
     invoice_id = Column(Integer, ForeignKey('invoice.id'), nullable=False)
     room_id = Column(ForeignKey('room.id'), nullable=False)
     # relationship
 
 
-
 class Invoice(db.Model):
     # attribute
     id = Column(Integer, autoincrement=True, primary_key=True)
-    total = Column(Float, default=0)
-    release = Column(DATETIME())
+    # total = Column(Float, default=0)
+    release = Column(DateTime, default=datetime.now())
 
     # foreign-key
     user_id = Column(ForeignKey('user.id'), nullable=False)
-    staff_id = Column(ForeignKey('staff.id'), nullable=False)
+    # staff_id = Column(ForeignKey('staff.id'))
 
     # relationship
     bookings = relationship('Booking', lazy=True, backref='invoice')
@@ -135,8 +145,18 @@ if __name__ == '__main__':
     with app.app_context():
         db.create_all()
 
-        # a = User(user_name='Admin', password=str(hashlib.md5('123456'.encode('utf-8')).hexdigest()), staff_id='4', role=UserRoleEnum.ADMIN)
-        # db.session.add(a)
+        a = User(name='Nguyễn Thi Quý', user_name='QuýUS', password=str(hashlib.md5('123456'.encode('utf-8')).hexdigest()),
+                 certificate='1111111111', role=UserRoleEnum.USER)
+        b = Category(name='Phòng 3 ng', capacity='3')
+        db.session.add(a)
+        db.session.commit()
+        # i = Invoice(user_id = '3')
+        # db.session.add(i)
+
+        # b = Booking(price=500, invoice_id='3', room_id='2')
+        # db.session.add(b)
+        # b = Booking(price=500, invoice_id='5', room_id='1')
+        # db.session.add(b)
         # db.session.commit()
         # c1 = Category(name='Phòng đôi')
         # c2 = Category(name='Phòng đơn')

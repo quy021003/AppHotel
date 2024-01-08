@@ -2,11 +2,13 @@ import math
 import utils
 from flask import request, render_template, redirect, jsonify, session
 from datetime import datetime, timedelta
+from flask_admin import Admin, BaseView, expose
+from flask_admin.contrib.sqla import ModelView
 from app import dao, app
 from app import login
 from flask_login import login_user
-
-
+from flask_login import logout_user, current_user
+import requests
 @app.route("/")
 def index():
     kw = request.args.get('kw')
@@ -41,16 +43,13 @@ def add_to_cart():
     id = str(data.get("id"))
     # if id in cart:
     #     # cart[id]['quantity'] += 1
-    #    #cart[id]['quantity'] = 1
     if id not in cart:
         cart[id] = {
             "id": id,
             "name": data.get('name'),
             "price": data.get('price'),
             "start": str(datetime.now().date()),
-            "end": str(datetime.now().date() + timedelta(days=1)),
-            # "start": str(datetime.now().date()),
-            # "end": str(datetime.now().date() + timedelta(days=1))
+            "end": str(datetime.now().date() + timedelta(days=1))
         }
 
     session['cart'] = cart
@@ -85,16 +84,29 @@ def common_res():
         'cart_stats' : utils.count_cart(session.get('cart'))
     }
 
-@app.route('/api/cart/<room_id>', methods = ['put'])
+
+@app.route('/api/cart/<room_id>', methods=['put'])
 def update_cart(room_id):
     cart = session.get('cart')
     if cart and room_id in cart:
-        quantity = request.json.get('quantity')
-        cart[room_id]['quantity'] = int(quantity)
+        # start = request.json.get('start')
+        end = request.json.get('end')
+        # cart[room_id]['start'] = str(start)
+        cart[room_id]['end'] = str(end)
 
     session['cart'] = cart
     return jsonify(utils.count_cart(cart))
 
+
+@app.route('/api/cart/start/<room_id>', methods=['put'])
+def update_cart_start(room_id):
+    cart = session.get('cart')
+    if cart and room_id in cart:
+        start = request.json.get('start')
+        cart[room_id]['start'] = str(start)
+
+    session['cart'] = cart
+    return jsonify(utils.count_cart(cart))
 
 @app.route('/api/cart/<product_id>', methods=['delete'])
 def delete_cart(product_id):
@@ -104,6 +116,36 @@ def delete_cart(product_id):
 
     session['cart'] = cart
     return jsonify(utils.count_cart(cart))
+
+
+@app.route('/login', methods = ['post', 'get'])
+def process_user_login():
+    if request.method.__eq__("POST"):
+        username = request.form.get('username')
+        password = request.form.get('password')
+
+        user = dao.auth_user(username=username, password=password)
+        if user:
+            login_user(user)
+
+        next = request.args.get('next')
+        return redirect("/" if next is None else next)
+    return render_template('login.html')
+
+
+@app.route("/api/pay", methods=['post'])
+def pay():
+    # if dao.add_receipt(session.get('cart')):
+    if dao.add_receipt(session.get('cart')):
+        del session['cart']
+        return jsonify({'status': 200})
+    else:
+        return jsonify({'status':500})
+    # return jsonify({'status': 500, 'err_msg': 'Something wrong!'})
+
+
+
+
 
 if __name__ == '__main__':
     from app import admin

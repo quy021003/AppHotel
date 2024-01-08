@@ -9,9 +9,22 @@
                 <a class="nav-link" href="/?cate_id={{c.id}}">{{c.name}}</a>
             </li>
             {% endfor %}
+
             <li class="nav-item">
                 <a class="nav-link bg-warning shadow rounded" href="/cart">&#128722;<span class="badge bg-danger cart-counter">{{cart_stats.total_quantity}}</span></a>
             </li>
+            {% if current_user.is_authenticated %}
+            <li class="nav-item">
+                <a class="nav-link text-dark" href="/login">{{current_user.user_name}}</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link bg-danger" href="/">Đăng xuất</a>
+            </li>
+            {% else %}
+            <li class="nav-item">
+                <a class="nav-link text-dark" href="/login">ĐĂNG NHẬP</a>
+            </li>
+            {% endif%}
         </ul> <!-- action "/" -->
         <form class="d-flex" action="/" method="get"> <!-- Method mặc định là get: ko an toàn -->
             <input class="form-control me-2" type="text" name="kw" placeholder="Nhập từ khoá">

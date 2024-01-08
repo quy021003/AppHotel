@@ -1,21 +1,27 @@
-from app.models import Category, Room, User
+from app.models import Category, Room, User, Invoice, Booking, UserRoleEnum
 import hashlib
-from app import app
+from app import app, db
+from sqlalchemy.orm import relationship
+from sqlalchemy import Column, String, Integer, Float, Boolean, ForeignKey, VARCHAR, DATETIME, Enum, DateTime
+from flask_login import current_user
+from sqlalchemy import Column, String, Integer, Float, Boolean, ForeignKey, VARCHAR, DATETIME, Enum, DateTime
+import enum
 def get_categories():
     return Category.query.all()
 
+def get_id_invoice_last():
+    return Invoice.query.get(Invoice.id).last()
 
 def query_single_room(page=None):
     s_room = Room.query.filter(Room.category_id == 1)
     if page:
         page = int(page)
         page_size = app.config["PAGE_SIZE"]
-        start = (page-1)*page_size
+        start = (page - 1) * page_size
 
-        return s_room.slice(start, start+page_size)
+        return s_room.slice(start, start + page_size)
 
     return s_room.all()
-
 
 
 def get_products(kw, cate_id, page=None):
@@ -30,15 +36,15 @@ def get_products(kw, cate_id, page=None):
     if page:
         page = int(page)
         page_size = app.config["PAGE_SIZE"]
-        start = (page-1)*page_size
+        start = (page - 1) * page_size
 
-        return products.slice(start, start+page_size)
+        return products.slice(start, start + page_size)
 
     return products.all()
 
 
 def count_single_room():
-    return  Room.query.filter(Room.category_id == 1).count()
+    return Room.query.filter(Room.category_id == 1).count()
 
 
 def count_product():
@@ -53,3 +59,20 @@ def auth_user(username, password):
     password = str(hashlib.md5(password.encode('utf-8')).hexdigest())
 
     return User.query.filter(User.user_name.__eq__(username), User.password.__eq__(password)).first()
+
+
+def add_receipt(cart):
+
+     if cart:
+        i = Invoice(user_id=current_user.id)
+
+
+        db.session.add(i)
+
+        for c in cart.values():
+            d = Booking(start=c['start'], end=c['end'], price=c['price'], invoice=i, room_id=c['id'])
+            db.session.add(d)
+
+        db.session.commit()
+
+        return True

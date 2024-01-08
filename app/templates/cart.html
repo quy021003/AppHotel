@@ -1,9 +1,13 @@
 {% extends 'layout/base.html' %}
 {% block title %}Giỏ hàng{% endblock %}
+{%block link%}
+<link rel="stylesheet" href="/static/css/cart.css"/>
+{%endblock%}
 {% block content %}
-<h1 class="text-center text-info mt-1">GIỎ HÀNG</h1>
+<h1 class="text-center text-info mt-1">DANH SÁCH ĐẶT PHÒNG</h1>
 
 {% if 'cart' in session %}
+
 <table class="table">
     <tr>
         <th>Mã Phòng</th>
@@ -19,10 +23,10 @@
         <td>{{c.name}}</td>
         <td>{{c.price}}</td>
         <td>
-            <input type="text" onblur="updateCart({{c.id}}, this)" value="{{c.start}}" class="form-control">
+            <input id="ips{{c.id}}" type="text" onblur="updateCartStart({{c.id}}, this)" value="{{c.start}}" class="ipDate form-control"/>
         </td>
         <td>
-            <input type="text" onblur="updateCart({{c.id}}, this)" value="{{c.end}}" class="form-control">
+            <input id="ipe{{c.id}}" type="text" onblur="updateCartEnd({{c.id}}, this)" value="{{c.end}}" class="ipDate form-control"/>
         </td>
         <td>
             <button onclick="deleteCart({{c.id}})" class="btn btn-danger">&times;</button>
@@ -35,7 +39,15 @@
     <h5> Tổng tiền: <span class="cart-amount">{{"{:,.0f}".format(cart_stats.total_amount)}}</span> VNĐ</h5>
 </div>
 <div class="text-end">
-    <input type="button" value="Thanh Toán" class="mr-2 btn btn-danger">
+    {% if current_user.is_authenticated%}
+    <input type="button" id="btn-purchase" onclick="pay()" value="Đặt phòng" class="mr-2 btn btn-danger">
+    {% else %}
+    <p>Vui lòng <a href="/login?next=/cart">đăng nhập hợp lệ</a></p>
+    {% endif %}
+</div>
+{% else %}
+<div class="alert alert-info">
+    KHÔNG có sản phẩm trong giỏ!
 </div>
 {% endif %}
 
