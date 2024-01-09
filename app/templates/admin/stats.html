@@ -2,4 +2,79 @@
 
 {% block body %}
 <h1 class="text-center text-info">Thống kê báo cáo</h1>
+<div class="row">
+    <div class="col-md-5 col-xs-12">
+        <table class="table">
+            <tr>
+                <th>Mã phòng:</th>
+                <th>Tên phòng:</th>
+                <th>Doanh thu:</th>
+            </tr>
+            {% for s in stats%}
+            <tr>
+                <td>{{s[0]}}</td>
+                <td>{{s[1]}}</td>
+                <td>{{s[2]}} VNĐ</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div class="col-md-7 col-xs-12">
+      <canvas id="myChart"></canvas>
+    </div>
+
+    <div class="col-md-5 col-xs-12">
+    <table class="table">
+            <tr>
+                <th>Mã phòng:</th>
+                <th>Tên phòng:</th>
+                <th>Số lần book:</th>
+            </tr>
+            {% for c in customers%}
+            <tr>
+                <td>{{c[0]}}</td>
+                <td>{{c[1]}}</td>
+                <td>{{c[2]}}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div class="col-md-7 col-xs-12">
+      <canvas id="myChartt"></canvas>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  window.onload = function(){
+  const ctx = document.getElementById('myChart');
+  let dtas = [];
+  let lbels = [];
+
+  {% for s in stats %}
+  dtas.push({{s[2]}})
+  lbels.push('{{s[1]}}')
+  {% endfor%}
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: lbels,
+      datasets: [{
+        label: 'Doanh thu',
+        data: dtas,
+        borderWidth: 1,
+        backgroundColor: ['red','green','blue','gold','gray;=']
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+
+
+</script>
 {% endblock %}
+

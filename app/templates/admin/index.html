@@ -4,6 +4,59 @@
 {% if current_user.is_authenticated %}
 <h1 class="text-center text-info">Chào mừng đến với trang quản trị</h1>
 <h2 class="text-center">Chào {{current_user.user_name}}!</h2>
+<div class="row">
+    <div class="col-md-5 col-xs-12">
+        <table class="table">
+            <tr>
+                <th>Mã loại: </th>
+                <th>Tên loại: </th>
+                <th>Số lượng: </th>
+            </tr>
+            {% for s in stats%}
+            <tr>
+                <td>{{s[0]}}</td>
+                <td>{{s[1]}}</td>
+                <td>{{s[2]}}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div class="col-md-7 col-xs-12">
+      <canvas id="myChart"></canvas>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  window.onload = function(){
+  const ctx = document.getElementById('myChart');
+  let dtas = [];
+  let lbels = [];
+
+  {% for s in stats %}
+  dtas.push({{s[2]}})
+  lbels.push('{{s[1]}}')
+  {% endfor%}
+  new Chart(ctx, {
+    type: 'pie',
+    data: {
+      labels: lbels,
+      datasets: [{
+        label: 'Số lượng',
+        data: dtas,
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+  }
+</script>
 {% else %}
 <h1>Đăng nhập trang quản trị</h1>
 <h1 class="text-center text-info"></h1>

@@ -1,12 +1,16 @@
 from app.models import Category, Room, UserRoleEnum
-from app import app, db
-from flask_admin import Admin, BaseView, expose
+from app import app, db, dao
+from flask_admin import Admin, BaseView, expose, AdminIndexView
 from flask_admin.contrib.sqla import ModelView
 from flask_login import logout_user, current_user
-from flask import redirect
+from flask import redirect, request
 
+class MyAdmin(AdminIndexView):
+    @expose('/')
+    def index(self):
+        return self.render('admin/index.html', stats=dao.count_rooms_by_cate())
 
-admin = Admin(app=app, name='QUẢN TRỊ KHÁCH SẠN', template_mode='bootstrap4')
+admin = Admin(app=app, name='QUẢN TRỊ KHÁCH SẠN', template_mode='bootstrap4', index_view=MyAdmin())
 
 
 class AuthenticatedAdmin(ModelView):
@@ -32,7 +36,8 @@ class MyCategoryView(AuthenticatedAdmin):
 class MyStatsView(AuthenticatedUser):
     @expose("/")
     def index(self):
-        return self.render('admin/stats.html')
+        kw = request.args.get('kw')
+        return self.render('admin/stats.html', stats = dao.get_revenue_on_room(kw=kw), customers = dao.count_customer_by_room())
 
 
 class LogoutView(AuthenticatedUser):

@@ -14,49 +14,35 @@ class UserRoleEnum(enum.Enum):
     STAFF = 3
 
 
-# class BaseUser(db.Model):
-#     __abstract__ = True
-#     # attribute
-#     id = Column(Integer, primary_key=True, autoincrement=True)
-#     user_name = Column(String(50), nullable=False)
-#     password = Column(String(50), nullable=False)
-#     name = Column(String(50), default='user_normal')
-#     adddress = Column(String(150))
-#     phone = Column(VARCHAR(10))
+class BaseUser(db.Model):
+    __abstract__ = True
+    # attribute
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String(50), default='user_normal')
+    phone = Column(VARCHAR(10))
 
 
-# class Staff(db.Model, UserMixin):
+# class Staff(BaseUser, UserMixin):
 #     # attribute
-#     id = Column(Integer, primary_key=True, autoincrement=True)
-#     user_name = Column(String(50), nullable=False)
-#     password = Column(String(50), nullable=False)
-#     name = Column(String(50), default='user_normal')
-#     adddress = Column(String(150))
-#     phone = Column(VARCHAR(10))
 #
 #     work = Column(String(150))
 #     salary = Column(Float, default=0)
-#     start_day = Column(DATETIME, default=datetime.now())
+#     start_day = Column(DateTime, default=datetime.now())
+#     role = Column(Enum(UserRoleEnum), default=UserRoleEnum.STAFF)
+#
+#     # relationship
+#     invoices = relationship('Invoice', lazy=True, backref='staff')
+#     def __str__(self):
+#         return self.user_name
 
 
-    # # relationship
-    # invoices = relationship('Invoice', lazy=True, backref='staff')
-    # def __str__(self):
-    #     return self.user_name
-
-
-class User(db.Model, UserMixin):
-    id = Column(Integer, primary_key=True, autoincrement=True)
+class User(BaseUser, UserMixin):
+    # attribute
     user_name = Column(String(50), nullable=False)
     password = Column(String(50), nullable=False)
-    name = Column(String(50), default='user_normal')
-    adddress = Column(String(150))
-    phone = Column(VARCHAR(10))
-    # attribute
-    certificate = Column(VARCHAR(10), default='123456')
     role = Column(Enum(UserRoleEnum), default=UserRoleEnum.USER)
     # relationship
-    invoices = relationship('Invoice', lazy=True, backref='User')
+    invoices = relationship('Invoice', lazy=True, backref='user')
     def __str__(self):
         return self.user_name
 
@@ -135,21 +121,28 @@ class Invoice(db.Model):
     release = Column(DateTime, default=datetime.now())
 
     # foreign-key
-    user_id = Column(ForeignKey('user.id'), nullable=False)
-    # staff_id = Column(ForeignKey('staff.id'))
-
+    user_id = Column(ForeignKey('user.id'))
+    customer_id = Column(ForeignKey('customer.id'), nullable=False)
     # relationship
     bookings = relationship('Booking', lazy=True, backref='invoice')
+
+class Customer(BaseUser):
+    cert = Column(VARCHAR(12), default='000000000000')
+    invoices = relationship('Invoice', lazy=True, backref='customer')
 
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
 
-        a = User(name='Nguyễn Thi Quý', user_name='QuýUS', password=str(hashlib.md5('123456'.encode('utf-8')).hexdigest()),
-                 certificate='1111111111', role=UserRoleEnum.USER)
-        b = Category(name='Phòng 3 ng', capacity='3')
-        db.session.add(a)
-        db.session.commit()
+        # a = User(name='Nguyễn Thi Quý', user_name='thiquy1243', password=str(hashlib.md5('123456'.encode('utf-8')).hexdigest()),
+        #           role=UserRoleEnum.ADMIN)
+        # b = User(name='Nguyễn Thi Quý', user_name='staff', password=str(hashlib.md5('123456'.encode('utf-8')).hexdigest()),
+        #          role=UserRoleEnum.STAFF)
+
+        # db.session.add(a)
+        # db.session.add(b)
+        # db.session.commit()
+        # db.session.commit()
         # i = Invoice(user_id = '3')
         # db.session.add(i)
 

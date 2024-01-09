@@ -34,13 +34,29 @@
     </tr>
     {% endfor %}
 </table>
+<!--<form class="form-group" method="post" action="">-->
+<!--        <input name="us_name" type="text" class="col-6 form-control" style="width: 36%;" id="user_name_tb" placeholder="Nhập tên khách hàng ...">-->
+<!--</form>-->
+<form action="/cart">
+  <div class="mb-3 mt-1">
+    <input onblur="direct()" style="width: 36%" type="text" class="form-control" id="username" placeholder="Nhập tên khách hàng..." name="uname">
+  </div>
+    <div class="mb-3 mt-1">
+      <input onblur="directt()" style="width: 36%" type="text" class="form-control" id="userphone" placeholder="Nhập SĐT khách hàng..." name="uuname">
+  </div>
+    <div class="mb-3 mt-1">
+      <input onblur="directtt()" style="width: 36%" type="text" class="form-control" id="userid" placeholder="Nhập CMT khách hàng..." name="uuuname">
+  </div>
+</form>
 <div>
     <h5> Số lượng: <span class="cart-counter">{{cart_stats.total_quantity}}</span> phòng</h5>
     <h5> Tổng tiền: <span class="cart-amount">{{"{:,.0f}".format(cart_stats.total_amount)}}</span> VNĐ</h5>
 </div>
 <div class="text-end">
     {% if current_user.is_authenticated%}
-    <input type="button" id="btn-purchase" onclick="pay()" value="Đặt phòng" class="mr-2 btn btn-danger">
+<!--    <input type="button" id="btn-purchase" onclick="pay()" value="Đặt phòng" >-->
+
+    <button type="submit" id="btn-purchase" onclick="pay()" class="mr-2 btn btn-danger">Đặt phòng</button>
     {% else %}
     <p>Vui lòng <a href="/login?next=/cart">đăng nhập hợp lệ</a></p>
     {% endif %}

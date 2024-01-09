@@ -9,6 +9,8 @@ from app import login
 from flask_login import login_user
 from flask_login import logout_user, current_user
 import requests
+
+
 @app.route("/")
 def index():
     kw = request.args.get('kw')
@@ -64,6 +66,8 @@ def load_user(user_id):
 
 @app.route('/cart')
 def cart():
+    # uname = request.args.get('uname')
+    # session['us_name'] = str(uname)
     return render_template('cart.html')
 
 
@@ -123,8 +127,8 @@ def process_user_login():
     if request.method.__eq__("POST"):
         username = request.form.get('username')
         password = request.form.get('password')
-
         user = dao.auth_user(username=username, password=password)
+
         if user:
             login_user(user)
 
@@ -135,16 +139,88 @@ def process_user_login():
 
 @app.route("/api/pay", methods=['post'])
 def pay():
-    # if dao.add_receipt(session.get('cart')):
+
     if dao.add_receipt(session.get('cart')):
         del session['cart']
+        # del session['us_name']
+        # del session['us_phone']
+        # del session['us_id']
         return jsonify({'status': 200})
     else:
         return jsonify({'status':500})
     # return jsonify({'status': 500, 'err_msg': 'Something wrong!'})
 
+@app.route('/endpoint', methods=['POST'])
+def process_data():
+    data = request.get_json()
+    value = data['data']
+    session['us_name'] = str(value)
+    response = {
+        'message': 'Đã nhận giá trị thành công',
+        'value': value
+    }
+    return jsonify(response)
+
+@app.route('/endpointt', methods=['POST'])
+def processs_data():
+    data = request.get_json()
+    value = data['data']
+    session['us_phone'] = int(value)
+    response = {
+        'message': 'Đã nhận giá trị thành công',
+        'value': value
+    }
+    return jsonify(response)
+
+@app.route('/endpointtt', methods=['POST'])
+def processss_data():
+    data = request.get_json()
+    value = data['data']
+    session['us_id'] = int(value)
+    response = {
+        'message': 'Đã nhận giá trị thành công',
+        'value': value
+    }
+    return jsonify(response)
+
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect('/')
+
+@app.route('/register', methods=['get', 'post'])
+def register():
+    err_msg = None
+    if request.method.__eq__("POST"):
+        password = request.form.get('password')
+        confirm = request.form.get('confirm')
+
+        if password.__eq__(confirm):
+            try:
+                dao.add_staff(name=request.form.get('name'),
+                             username=request.form.get('username'),
+                             password=password)
+            except Exception as e:
+                err_msg = str(e)
+            else:
+                return redirect('/login')
+        else:
+            err_msg = 'Mật khẩu không khớp!'
+
+    return render_template('register.html', err_msg=err_msg)
 
 
+@app.route('/rooms/<id>')
+def details(id):
+    page = request.args.get('page')
+    num = dao.count_img_by_id(id)
+    page_size = app.config['PAGE_SIZE_DETAILS']
+    return render_template('details.html',
+                           room=dao.get_room_by_id(id),
+                           images=dao.get_img_by_id(id),
+                           facilities=dao.get_facilities_by_id(id),
+                           pages=math.ceil(num/page_size),
+                           imgs = dao.get_imgs(id, page))
 
 
 if __name__ == '__main__':

@@ -15,14 +15,18 @@
             </li>
             {% if current_user.is_authenticated %}
             <li class="nav-item">
-                <a class="nav-link text-dark" href="/login">{{current_user.user_name}}</a>
+                <a class="nav-link text-dark" href="/login">{{current_user.user_name}} <img src="https://images.all-free-download.com/images/graphiclarge/user_37223.jpg" width="30" class="rounded-circle"></a>
+
             </li>
             <li class="nav-item">
-                <a class="nav-link bg-danger" href="/">Đăng xuất</a>
+                <a class="nav-link bg-danger" href="/logout">Đăng xuất</a>
             </li>
             {% else %}
             <li class="nav-item">
                 <a class="nav-link text-dark" href="/login">ĐĂNG NHẬP</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" href="/register">ĐĂNG KÍ</a>
             </li>
             {% endif%}
         </ul> <!-- action "/" -->

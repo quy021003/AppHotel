@@ -6,40 +6,16 @@
 {% block content %}
 
 
-
 <div class="head-content">
-    <h1 class="heading_text text-center mt-2 animate__animated animate__flash">ĐẶT PHÒNG KHÁCH SẠN TRỰC TUYẾN</h1>
+    <h1 style="font-weight: bold, line-height: 1.2" class="heading_text text-center animate__animated animate__flash">ĐẶT PHÒNG KHÁCH SẠN</h1>
 </div>
 <section class="container">
 
-    <div class="full-width no-padding v-margin-top-30 v-margin-bottom-30">
-        <div class="full-width no-padding heading">
-            <h2 class="heading__title">Đa dạng các loại phòng</h2>
-            <p class="heading__description">Chọn loại phòng bạn muốn</p>
-        </div>
-        <div class="img-cate">
-            <div>
-            <a class="mt-2" style="position: relative; display: inline-block;" href="/single">
-                <img class="full-width" style="width:250px; height:350px;" src="https://th.bing.com/th/id/R.79c1e28db681a64910f3cf5a4322c8da?rik=6P3HQw4W%2fmQyJA&pid=ImgRaw&r=0">
-                <span style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 24px; color: white; text-shadow: 2px 2px 4px black;">Phòng đơn</span>
-            </a>
-            </div>
-            <div>
-            <a class="mt-2" style="position: relative; display: inline-block;" href="#" >
-                <img class="full-width" style="width:250px; height:350px;" src="https://th.bing.com/th/id/OIP.uIPMZt9MIFwHrBF72xClQwHaFj?w=1024&h=768&rs=1&pid=ImgDetMain">
-                <span style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 24px; color: white; text-shadow: 2px 2px 4px black;">Phòng đôi</span>
-            </a>
-            </div>
-            <div>
-            <a class="mt-2" style="position: relative; display: inline-block;" href="#">
-                <img class="full-width" style="width:250px; height:350px;" src="https://img-nos.yiyouliao.com/alph/5a0a9a29ef81a7af86385134316cc5ee.jpeg?yiyouliao_channel=msn_image">
-                <span style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 24px; color: white; text-shadow: 2px 2px 4px black;">Phòng gia đình</span>
-            </a>
-            </div>
-        </div>
+    <div style="border: 2px solid white;" class="full-width no-padding v-margin-top-30 v-margin-bottom-30">
+
     </div>
 
-    <h2 class="text-center mt-2">DANH SÁCH PHÒNG</h2>
+    <h2 style="color: whitesmoke; background-color: gold;" class="text-center mt-2">DANH SÁCH PHÒNG</h2>
     <ul class="pagination mt-2 d-flex justify-content-center">
         {% for i in range(pages) %}
         <li class="page-item"><a class="page-link" href="/?page={{i+1}}">{{i+1}}</a></li>
@@ -55,8 +31,8 @@
                 <span class="warning">AVAILABLE</span>
                 <div class="card-body">
                     <h4 class="card-title">{{p.name}}</h4>
-                    <p class="card-text">{{p.price}} VND</p>
-                    <a href="#" class="btn btn-primary">Xem chi tiết</a>
+                    <p class="card-text">{{"{:,.0f}".format(p.price).replace(",", ".")}} VNĐ</p>
+                    <a href="/rooms/{{p.id}}" class="btn btn-primary">Xem chi tiết</a>
                     <a href="javascript:;" onclick="addToCart({{p.id}},'{{p.name}}',{{p.price}})"
                        class="btn btn-danger" id="btn_a_{{p.id}}">Đặt hàng</a>
                 </div>
@@ -84,4 +60,5 @@
     </div>
 
 </section>
+
 {% endblock%}

@@ -3,7 +3,7 @@ const year = today.getFullYear();
 const month = String(today.getMonth() + 1).padStart(2, '0');
 const day = String(today.getDate()).padStart(2, '0');
 const todayString = `${year}-${month}-${day}`;
-const regularDay = '28';
+const regularDay = '28'; // Có thể thay đổi ngày qui định
 function constraintRegularDay(stringA, stringB, regularDay)
 {
     var a = new Date(stringA)
@@ -241,6 +241,7 @@ function deleteCart(id){
     }
 }
 function pay() {
+
     if (confirm("Bạn muốn đặt phòng như trên?") === true) {
         fetch("/api/pay", {
             method: 'post'
@@ -256,5 +257,47 @@ function pay() {
         })
     }
 }
+ function direct(){
+    let t = document.getElementById("username");
+    var value = t.value;
+    fetch('/endpoint', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({data: value}),
+})
+.then(response => response.json())
+.then(data => {
 
+});}
+ function directt(){
+    let p = document.getElementById("userphone");
+    var value = p.value;
+    fetch('/endpointt', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({data: value}),
+})
+.then(response => response.json())
+.then(data => {
 
+});}
+
+ function directtt(){
+    let i = document.getElementById("userid");
+    var value = i.value;
+    fetch('/endpointtt', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({data: value}),
+})
+.then(response => response.json())
+.then(data => {
+
+});
+ }
