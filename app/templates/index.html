@@ -15,7 +15,7 @@
 
     </div>
 
-    <h2 style="color: whitesmoke; background-color: gold;" class="text-center mt-2">DANH SÁCH PHÒNG</h2>
+    <h2 style="color: whitesmoke; background-color: #3921B3;" class="text-center mt-2">DANH SÁCH PHÒNG</h2>
     <ul class="pagination mt-2 d-flex justify-content-center">
         {% for i in range(pages) %}
         <li class="page-item"><a class="page-link" href="/?page={{i+1}}">{{i+1}}</a></li>
@@ -32,7 +32,7 @@
                 <div class="card-body">
                     <h4 class="card-title">{{p.name}}</h4>
                     <p class="card-text">{{"{:,.0f}".format(p.price).replace(",", ".")}} VNĐ</p>
-                    <a href="/rooms/{{p.id}}" class="btn btn-primary">Xem chi tiết</a>
+                    <a href="/rooms/{{p.id}}?page=1" class="btn btn-primary">Xem chi tiết</a>
                     <a href="javascript:;" onclick="addToCart({{p.id}},'{{p.name}}',{{p.price}})"
                        class="btn btn-danger" id="btn_a_{{p.id}}">Đặt hàng</a>
                 </div>

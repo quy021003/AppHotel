@@ -1,0 +1,44 @@
+
+{% extends 'admin/master.html' %}
+{% block body %}
+<h1 class="text-center text-info" style="margin-bottom: 20px">THÔNG TIN HOÁ ĐƠN</h1>
+<form class="d-flex" action="/admin/myinvoiceview"> <!-- Method mặc định là get: ko an toàn -->
+            <input class="form-control me-2" type="text" name="kw_invoice" placeholder="Nhập mã hoá đơn...">
+            <div style="padding: 0 10px;"></div>
+            <input style="margin-right: 2%" class="form-control me-2" type="text" name="c_id" placeholder="Nhập mã khách hàng...">
+            <!--Name của box tìm kiếm -->
+            <button class="btn btn-success" type="submit">Tìm</button><!-- Nút tìm kiếm -> Type submit -->
+            <a id="reloadPage" href="/admin/myinvoiceview" style="color: white;margin-left: 0.5%;padding:5px 8px;background-color: #28a745; border-radius: .25rem; border:#28a745 solid ">&#8634</a>
+</form>
+
+<div class="row" style="justify-content: center; margin-top:2%; background-color: whitesmoke">
+    <div class="col-md-5 col-xs-12">
+        <table class="table text-center mt-3">
+            <tr style="background-color: #58A1D9; color: white">
+                <th>Mã hoá đơn</th>
+                <th>Mã khách hàng</th>
+                <th>Tên khách hàng</th>
+                <th>Ngày in</th>
+            </tr>
+            {% for i in invoices%}
+            {% if loop.index is even %}
+            <tr style="background-color: #F2E2AA">
+                <td>{{i[0]}}</td>
+                <td>{{i[2]}}</td>
+                <td>{{i[3]}}</td>
+                <td>{{i[1]}}</td>
+            </tr>
+
+            {% else %}
+            <tr style="background-color: #F2C070">
+                <td>{{i[0]}}</td>
+                <td>{{i[2]}}</td>
+                <td>{{i[3]}}</td>
+                <td>{{i[1]}}</td>
+            </tr>
+            {% endif%}
+            {% endfor %}
+        </table>
+    </div>
+</div>
+{% endblock %}

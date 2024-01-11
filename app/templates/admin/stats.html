@@ -4,65 +4,81 @@
 <h1 class="text-center text-info">Thống kê báo cáo</h1>
 <div class="row">
     <div class="col-md-5 col-xs-12">
+
         <table class="table">
+            <h3 style="background-color: #EA4335; text-align: center; padding: 10px 0; letter-spacing: 5px">DOANH THU &#128181</h3>
             <tr>
-                <th>Mã phòng:</th>
-                <th>Tên phòng:</th>
-                <th>Doanh thu:</th>
+                <th>Mã phòng</th>
+                <th>Tên phòng</th>
+                <th>Doanh thu</th>
             </tr>
             {% for s in stats%}
             <tr>
                 <td>{{s[0]}}</td>
                 <td>{{s[1]}}</td>
-                <td>{{s[2]}} VNĐ</td>
+                <td>{{"{:,.0f}".format(s[2]).replace(",", ".")}} VNĐ</td>
             </tr>
             {% endfor %}
         </table>
     </div>
     <div class="col-md-7 col-xs-12">
       <canvas id="myChart"></canvas>
+        <h6 style="font-style: italic;;" class="text-center">Biểu đồ doanh thu của từng phòng</h6>
     </div>
 
+
+
+</div>
+<div class="mt-5"></div>
+<div class="row">
     <div class="col-md-5 col-xs-12">
-    <table class="table">
+
+        <table class="table">
+            <h3 style="background-color: #4285F4; text-align: center; padding: 10px 0;letter-spacing: 5px">BOOKING &#128273</h3>
             <tr>
-                <th>Mã phòng:</th>
-                <th>Tên phòng:</th>
-                <th>Số lần book:</th>
+                <th>Mã phòng</th>
+                <th>Tên phòng</th>
+                <th>Lượt book</th>
             </tr>
-            {% for c in customers%}
+            {% for s in rooms_booking%}
             <tr>
-                <td>{{c[0]}}</td>
-                <td>{{c[1]}}</td>
-                <td>{{c[2]}}</td>
+                <td>{{s[0]}}</td>
+                <td>{{s[1]}}</td>
+                <td>{{s[2]}}</td>
             </tr>
             {% endfor %}
         </table>
     </div>
     <div class="col-md-7 col-xs-12">
       <canvas id="myChartt"></canvas>
+        <h6 style="font-style: italic;;" class="text-center ">Biểu đồ lượt book trên từng phòng</h6>
     </div>
+
+
 </div>
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-  window.onload = function(){
+window.onload = function() {
   const ctx = document.getElementById('myChart');
-  let dtas = [];
-  let lbels = [];
+
+  let data = [];
+  let labels = [];
 
   {% for s in stats %}
-  dtas.push({{s[2]}})
-  lbels.push('{{s[1]}}')
-  {% endfor%}
+  data.push({{ s[2] }})
+  labels.push('{{ s[1] }}')
+  {% endfor %}
+
   new Chart(ctx, {
     type: 'bar',
     data: {
-      labels: lbels,
+      labels: labels,
       datasets: [{
         label: 'Doanh thu',
-        data: dtas,
+        data: data,
         borderWidth: 1,
-        backgroundColor: ['red','green','blue','gold','gray;=']
+        backgroundColor: ['red', 'green', 'blue', 'gold', 'brown']
       }]
     },
     options: {
@@ -74,7 +90,37 @@
     }
   });
 
+  const ctxx = document.getElementById('myChartt');
 
+  let dt = [];
+  let lb = [];
+
+  {% for s in rooms_booking %}
+  dt.push({{ s[2] }})
+  lb.push('{{ s[1] }}')
+  {% endfor %}
+
+  new Chart(ctxx, {
+    type: 'pie',
+    data: {
+      labels: lb,
+      datasets: [{
+        label: 'Lượt book',
+        data: dt,
+        borderWidth: 1,
+        backgroundColor: ['red', 'green', 'blue', 'gold', 'brown']
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+}
 </script>
+
 {% endblock %}
 

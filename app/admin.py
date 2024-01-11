@@ -37,8 +37,17 @@ class MyStatsView(AuthenticatedUser):
     @expose("/")
     def index(self):
         kw = request.args.get('kw')
-        return self.render('admin/stats.html', stats = dao.get_revenue_on_room(kw=kw), customers = dao.count_customer_by_room())
+        return self.render('admin/stats.html', stats = dao.get_revenue_on_room(kw=kw)\
+                           , customers = dao.count_customer_by_room()\
+                           , rooms_booking = dao.stats_room_booking())
 
+
+class MyInvoiceView(AuthenticatedUser):
+    @expose("/")
+    def index(self):
+        kw = request.args.get('kw_invoice')
+        c_id = request.args.get('c_id')
+        return self.render('admin/invoice.html', invoices=dao.get_invoices(kw=kw, c_id=c_id))
 
 class LogoutView(AuthenticatedUser):
     @expose("/")
@@ -49,5 +58,7 @@ class LogoutView(AuthenticatedUser):
 
 admin.add_view(MyCategoryView(Category, db.session))
 admin.add_view(MyRoomView(Room, db.session))
-admin.add_view(MyStatsView(name='Statistic'))
-admin.add_view(LogoutView(name='Log out'))
+admin.add_view(MyStatsView(name='Thống kê'))
+admin.add_view(MyInvoiceView(name='Hoá đơn'))
+admin.add_view(LogoutView(name='Đăng xuất'))
+

@@ -301,3 +301,11 @@ function pay() {
 
 });
  }
+
+
+ document.getElementById("reloadPage").onclick =
+function reloadWithoutQueryParams() {
+//  var currentUrl = window.location.href.split('?')[0];
+//  window.location.href = currentUrl;
+alert(';chao')
+}

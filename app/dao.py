@@ -11,8 +11,6 @@ from sqlalchemy import func
 def get_categories():
     return Category.query.all()
 
-def get_id_invoice_last():
-    return Invoice.query.get(Invoice.id).last()
 
 def query_single_room(page=None):
     s_room = Room.query.filter(Room.category_id == 1)
@@ -24,6 +22,31 @@ def query_single_room(page=None):
         return s_room.slice(start, start + page_size)
 
     return s_room.all()
+
+
+def get_invoices(kw, c_id):
+
+    if kw and c_id:
+        return db.session.query(Invoice.id, Invoice.release, Invoice.customer_id, Customer.name)\
+            .join(Customer, Customer.id.__eq__(Invoice.customer_id))\
+            .filter((Invoice.id.__eq__(kw)).__and__(Invoice.customer_id.__eq__(c_id))).all()
+    if kw:
+        return db.session.query(Invoice.id, Invoice.release, Invoice.customer_id, Customer.name)\
+            .join(Customer, Customer.id.__eq__(Invoice.customer_id))\
+            .filter(Invoice.id.__eq__(kw)).all()
+
+    if c_id:
+        return db.session.query(Invoice.id, Invoice.release, Invoice.customer_id, Customer.name)\
+            .join(Customer, Customer.id.__eq__(Invoice.customer_id))\
+            .filter(Invoice.customer_id.__eq__(c_id)).all()
+
+    return db.session.query(Invoice.id, Invoice.release, Invoice.customer_id, Customer.name)\
+                     .join(Customer, Customer.id.__eq__(Invoice.customer_id)).all()
+
+
+# def get_all_invoices():
+#     return db.session.query(Invoice.id, Invoice.release, Invoice.customer_id, Customer.name)\
+#                      .join(Customer, Customer.id.__eq__(Invoice.customer_id)).all()
 
 
 def get_products(kw, cate_id, page=None):
@@ -152,6 +175,12 @@ def get_imgs(id, page=None):
 
     return imgs.all()
 
+
+def stats_room_booking():
+    return db.session.query(Room.id, Room.name,func.count(Booking.room_id))\
+            .join(Booking, Booking.room_id.__eq__(Room.id), isouter=True)\
+            .group_by(Room.name).all()
+
 if __name__ == '__main__':
     with app.app_context():
-        print(count_customer_by_room())
+        print(get_invoices(kw=1, c_id=1))
