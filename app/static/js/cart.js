@@ -222,6 +222,47 @@ function updateCartStart(id, obj) {
             c.innerText = data.total_amount.toLocaleString("en");
     });
 }
+function updateCartContain(id, obj) {
+
+    var input = document.getElementById(`ipc${id}`).value;
+    var vl = input.trim()
+    if (isNaN(vl))
+    {
+        alert('Giá trị nhập vào phải là số')
+        let btnP = document.getElementById("btn-purchase");
+            btnP.disabled = true;
+    }
+    else
+        {
+            let btnP = document.getElementById("btn-purchase");
+            btnP.disabled = false;
+        }
+
+    fetch(`/api/cart/contain/${id}`, {
+        method: "put",
+        body: JSON.stringify({
+            "contain": obj.value
+        }),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }).then(function(res) {
+        return res.json();
+    }).then(function(data) {
+
+        let carts = document.getElementsByClassName('cart-counter');
+        for (let c of carts)
+            c.innerText = data.total_quantity;
+
+        let amounts = document.getElementsByClassName('cart-amount');
+        for (let c of amounts)
+            c.innerText = data.total_amount.toLocaleString("en");
+
+        let contains = document.getElementsByClassName('cart-contain');
+        for(let c of contains)
+            c.innerText = data.contain;
+    });
+}
 function deleteCart(id){
     if(confirm("Bạn muốn xoá khỏi giỏ hàng?") === true){
     fetch(`/api/cart/${id}`,{

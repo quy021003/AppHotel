@@ -100,7 +100,7 @@ def add_receipt(cart):
         db.session.add(i)
 
         for c in cart.values():
-            d = Booking(start=c['start'], end=c['end'], price=c['price'], invoice=i, room_id=c['id'])
+            d = Booking(start=c['start'], end=c['end'], price=c['price'], invoice=i, room_id=c['id'], contains=c['contain'])
             db.session.add(d)
 
         db.session.commit()

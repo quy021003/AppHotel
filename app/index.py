@@ -1,5 +1,5 @@
 import math
-import utils
+from app import utils
 from flask import request, render_template, redirect, jsonify, session
 from datetime import datetime, timedelta
 from flask_admin import Admin, BaseView, expose
@@ -51,7 +51,8 @@ def add_to_cart():
             "name": data.get('name'),
             "price": data.get('price'),
             "start": str(datetime.now().date()),
-            "end": str(datetime.now().date() + timedelta(days=1))
+            "end": str(datetime.now().date() + timedelta(days=1)),
+            "contain": int('2')
         }
 
     session['cart'] = cart
@@ -108,6 +109,16 @@ def update_cart_start(room_id):
     if cart and room_id in cart:
         start = request.json.get('start')
         cart[room_id]['start'] = str(start)
+
+    session['cart'] = cart
+    return jsonify(utils.count_cart(cart))
+
+@app.route('/api/cart/contain/<room_id>', methods=['put'])
+def update_cart_contain(room_id):
+    cart = session.get('cart')
+    if cart and room_id in cart:
+        contain = request.json.get('contain')
+        cart[room_id]['contain'] = int(contain)
 
     session['cart'] = cart
     return jsonify(utils.count_cart(cart))
