@@ -1,4 +1,8 @@
 from datetime import datetime
+
+from flask import session
+
+
 def count_cart(cart):
     total_quantity, total_amount, contain = 0, 0, 0
 
@@ -17,6 +21,7 @@ def count_cart(cart):
 
             total_amount += result * (c['price'] + charge*person_excess)
             contain += c['contain']
+            session['total_amount'] = total_amount
     return {
         'total_amount': total_amount,
         'total_quantity': total_quantity,

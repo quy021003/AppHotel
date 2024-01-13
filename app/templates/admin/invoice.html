@@ -12,13 +12,15 @@
 </form>
 
 <div class="row" style="justify-content: center; margin-top:2%; background-color: whitesmoke">
-    <div class="col-md-5 col-xs-12">
+    <div class="col-md-10 col-xs-12">
         <table class="table text-center mt-3">
             <tr style="background-color: #58A1D9; color: white">
                 <th>Mã hoá đơn</th>
                 <th>Mã khách hàng</th>
                 <th>Tên khách hàng</th>
                 <th>Ngày in</th>
+                <th>Tổng tiền</th>
+                <th>Chi tiết</th>
             </tr>
             {% for i in invoices%}
             {% if loop.index is even %}
@@ -27,6 +29,8 @@
                 <td>{{i[2]}}</td>
                 <td>{{i[3]}}</td>
                 <td>{{i[1]}}</td>
+                <td>{{"{:,.0f}".format(i[4])}} VNĐ</td>
+                <td><a href="http://127.0.0.1:5000/admin/myinvoiceview/{{i[0]}}">Chi tiết</a></td>
             </tr>
 
             {% else %}
@@ -35,6 +39,8 @@
                 <td>{{i[2]}}</td>
                 <td>{{i[3]}}</td>
                 <td>{{i[1]}}</td>
+                <td>{{"{:,.0f}".format(i[4])}} VNĐ</td>
+                <td><a href="http://127.0.0.1:5000/admin/myinvoiceview/{{i[0]}}">Chi tiết</a></td>
             </tr>
             {% endif%}
             {% endfor %}

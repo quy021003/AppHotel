@@ -282,7 +282,7 @@ function deleteCart(id){
     }
 }
 function pay() {
-
+    let a = document.getElementsByClassName("cart-amount").innerText
     if (confirm("Bạn muốn đặt phòng như trên?") === true) {
         fetch("/api/pay", {
             method: 'post'

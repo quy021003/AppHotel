@@ -56,7 +56,6 @@ def add_to_cart():
         }
 
     session['cart'] = cart
-
     return jsonify(utils.count_cart(cart))
 
 
@@ -152,6 +151,7 @@ def process_user_login():
 def pay():
 
     if dao.add_receipt(session.get('cart')):
+
         del session['cart']
         # del session['us_name']
         # del session['us_phone']
@@ -234,6 +234,9 @@ def details(id):
                            imgs = dao.get_imgs(id, page))
 
 
+
+
 if __name__ == '__main__':
     from app import admin
     app.run(debug=True)
+

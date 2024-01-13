@@ -27,20 +27,20 @@ def query_single_room(page=None):
 def get_invoices(kw, c_id):
 
     if kw and c_id:
-        return db.session.query(Invoice.id, Invoice.release, Invoice.customer_id, Customer.name)\
+        return db.session.query(Invoice.id, Invoice.release, Invoice.customer_id, Customer.name, Invoice.total)\
             .join(Customer, Customer.id.__eq__(Invoice.customer_id))\
             .filter((Invoice.id.__eq__(kw)).__and__(Invoice.customer_id.__eq__(c_id))).all()
     if kw:
-        return db.session.query(Invoice.id, Invoice.release, Invoice.customer_id, Customer.name)\
+        return db.session.query(Invoice.id, Invoice.release, Invoice.customer_id, Customer.name, Invoice.total)\
             .join(Customer, Customer.id.__eq__(Invoice.customer_id))\
             .filter(Invoice.id.__eq__(kw)).all()
 
     if c_id:
-        return db.session.query(Invoice.id, Invoice.release, Invoice.customer_id, Customer.name)\
+        return db.session.query(Invoice.id, Invoice.release, Invoice.customer_id, Customer.name, Invoice.total)\
             .join(Customer, Customer.id.__eq__(Invoice.customer_id))\
             .filter(Invoice.customer_id.__eq__(c_id)).all()
 
-    return db.session.query(Invoice.id, Invoice.release, Invoice.customer_id, Customer.name)\
+    return db.session.query(Invoice.id, Invoice.release, Invoice.customer_id, Customer.name, Invoice.total)\
                      .join(Customer, Customer.id.__eq__(Invoice.customer_id)).all()
 
 
@@ -96,7 +96,7 @@ def add_receipt(cart):
 
         a = Customer(cert=ui, phone=up, name=un)
         db.session.add(a)
-        i = Invoice(user=current_user, customer=a)
+        i = Invoice(user=current_user, customer=a, total=int(session.get('total_amount')))
         db.session.add(i)
 
         for c in cart.values():
@@ -151,9 +151,10 @@ def get_room_by_id(id):
 
 
 def get_img_by_id(id):
-    return db.session.query(Images).join(Room).filter(Room.id.__eq__(id))
+    return db.session.query(Images).filter(Room.id.__eq__(id))
 
-
+def get_booking_by_id(id):
+    return db.session.query(Booking).filter(Booking.id.__eq__(id))
 
 def get_facilities_by_id(id):
     return db.session.query(Facility).join(Room).filter(Room.id.__eq__(id))
@@ -176,6 +177,11 @@ def get_imgs(id, page=None):
     return imgs.all()
 
 
+def get_bookings(invoice_id):
+    return db.session.query(Booking.id, Booking.room_id, Booking.contains, Booking.start,Booking.end)\
+        .filter(Booking.invoice_id.__eq__(invoice_id)).all()
+
+
 def stats_room_booking():
     return db.session.query(Room.id, Room.name,func.count(Booking.room_id))\
             .join(Booking, Booking.room_id.__eq__(Room.id), isouter=True)\
@@ -183,4 +189,4 @@ def stats_room_booking():
 
 if __name__ == '__main__':
     with app.app_context():
-        print(get_invoices(kw=1, c_id=1))
+        print(get_bookings(1))

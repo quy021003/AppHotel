@@ -3,7 +3,8 @@ from app import app, db, dao
 from flask_admin import Admin, BaseView, expose, AdminIndexView
 from flask_admin.contrib.sqla import ModelView
 from flask_login import logout_user, current_user
-from flask import redirect, request
+from flask import redirect, request, render_template
+
 
 class MyAdmin(AdminIndexView):
     @expose('/')
@@ -55,6 +56,9 @@ class LogoutView(AuthenticatedUser):
         logout_user()
         return redirect('/admin')
 
+@app.route('/admin/myinvoiceview/<id>')
+def bookings(id):
+    return render_template('/admin/booking.html', books=dao.get_bookings(id))
 
 admin.add_view(MyCategoryView(Category, db.session))
 admin.add_view(MyRoomView(Room, db.session))
